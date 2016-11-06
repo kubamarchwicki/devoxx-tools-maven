@@ -1,0 +1,38 @@
+{
+  "name": "sample-web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "todo-ui",
+  "scripts": {
+    "install": "bower install",
+    "start": "nodemon ./server-stub.js",
+    "start:dist": "NODE_ENV=dist nodemon ./server-stub.js",
+    "clean": "rimraf dist pacts logs",
+    "test": "mocha",
+    "build": "npm run clean && npm run build:fs && npm run build:html && npm run build:js",
+    "build:fs": "mkdirp dist/js && cp-cli app/components dist/components",
+    "build:html": "htmlprocessor app/index.html -o dist/index.html --list dist/replacement.list",
+    "build:js": "cat dist/replacement.list | grep 'js$' | cut -d: -f2 | xargs -I {} echo app/{} | xargs uglifyjs -o dist/js/bundle.min.js",
+    "postbuild": "rimraf dist/replacement.list"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4",
+    "body-parser": "^1",
+    "nodemon": "^1"
+  },
+  "devDependencies": {
+    "rimraf": "latest",
+    "mkdirp": "latest",
+    "cp-cli": "latest",
+    "htmlprocessor": "latest",
+    "uglify-js": "latest",
+    "bower": "latest",
+    "mocha": "latest",
+    "chai": "latest",
+    "request": "latest",
+    "pact": "latest",
+    "@pact-foundation/pact-node": "latest"
+  }
+}

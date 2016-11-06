@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.example.maven</groupId>
+        <artifactId>deploy</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.exampe.maven.deployment</groupId>
+    <artifactId>docker</artifactId>
+    <name>App :: deployment :: docker</name>
+
+    <build>
+        <plugins>
+            <!-- tag::docker[] -->
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.17.1</version>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>com.example/todo-web-app</name>
+                            <alias>todo-web-app</alias>
+                            <build>
+                                <from>jboss/wildfly:latest</from>
+                                <tags>
+                                    <tag>latest</tag>
+                                    <tag>${working.version}</tag>
+                                </tags>
+                                <assembly>
+                                    <basedir>/</basedir>
+                                    <!-- user:gorup:run-user -->
+                                    <user>jboss:jboss:jboss</user>
+                                    <inline>
+                                        <dependencySets>
+                                            <dependencySet>
+                                                <includes>
+                                                    <include>
+                                                        com.example.maven.application:war-assembly
+                                                    </include> <!--1-->
+                                                </includes>
+                                                <outputDirectory>
+                                                    /opt/jboss/wildfly/standalone/deployments/
+                                                </outputDirectory>
+                                                <outputFileNameMapping>ROOT.war</outputFileNameMapping>
+                                            </dependencySet>
+                                        </dependencySets>
+                                    </inline>
+                                </assembly>
+                                <cmd>
+                                    <exec>
+                                        <arg>/opt/jboss/wildfly/bin/standalone.sh</arg>
+                                        <arg>-b</arg>
+                                        <arg>0.0.0.0</arg>
+                                    </exec>
+                                </cmd>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
+            </plugin>
+            <!-- end::docker[] -->
+        </plugins>
+    </build>
+
+
+</project>

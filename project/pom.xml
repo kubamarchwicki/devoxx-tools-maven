@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example.maven</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>App</name>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <releases.branch.name>releases/${project.version}</releases.branch.name>
+    </properties>
+
+    <modules>
+        <module>app</module>
+        <module>deploy</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.example.maven.application</groupId>
+                <artifactId>war-assembly</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!---->
+    <scm>
+        <connection>scm:git:git@github.com:kubamarchwicki/devoxx-tools-maven.git</connection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <build>
+        <plugins>
+            <!-- tag::branch[] -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>1.9.5</version>
+                <configuration>
+                    <branch>${releases.branch.name}</branch>
+                    <pushChanges>false</pushChanges>
+                </configuration>
+            </plugin>
+            <!-- end::branch[] -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <executions>
+                    <execution>
+                        <id>git-checkout</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>git</executable>
+                            <arguments>
+                                <argument>checkout</argument>
+                                <argument>${releases.branch.name}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- tag::release-plugin[] -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <tagNameFormat>v@{project.version}</tagNameFormat><!--1-->
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <pushChanges>false</pushChanges> <!--2-->
+                    <localCheckout>true</localCheckout> <!--3-->
+                    <preparationGoals>
+                        clean verify scm:branch exec:exec@git-checkout
+                    </preparationGoals> <!--4-->
+                    <goals>install</goals> <!--5-->
+                </configuration>
+            </plugin>
+            <!-- end::release-plugin[] -->
+        </plugins>
+    </build>
+
+</project>

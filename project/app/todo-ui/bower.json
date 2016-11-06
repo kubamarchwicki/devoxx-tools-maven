@@ -1,0 +1,14 @@
+{
+  "name": "sample-web",
+  "version": "0.0.0",
+  "authors": [
+    "kubamarchwicki <kuba@marchwicki.pl>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "jquery": "1.9.1",
+    "backbone": "1.0.0",
+    "underscore": "1.4.4"
+  }
+}
