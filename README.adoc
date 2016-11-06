@@ -1,0 +1,155 @@
+= Maven - the ultimate CD tool
+:toc: macro
+:imagesdir: project/target/images
+
+image::http://i3.kym-cdn.com/entries/icons/original/000/004/006/y-u-no-guy.jpg[]
+
+{zwsp}
+
+[discrete]
+== Start here: http://tiny.cc/maven-devoxx
+
+toc::[]
+
+== Who am I?
+
+Jakub Marchwicki::
+* developer
+* position wise: ex-architect, ex-manager, ex-consultant
+* I help teams gradually recover from legacy trauma
+** Introducing microservices - *out of frying pan into the fire*
+* Twitter: *@kubem*
+
+== Why not Maven?
+
+* Maven will make the preferred path the *easy path*
+** The *easy path* might not be the *best path*
+* If your idea doesn't confront the Maven's  - *it's you problem*
+** After that not easiest to extends - matters of hours not minutes
+* Honestly, besides dependency management there is not much so great about Maven
+
+== Why Maven?
+
+* Well known, old-but-goldie tech classic
+
+== Build pipeline
+
+// TODO - add color to the last box (promotion)
+
+[ditaa]
+....
+/-------------\
+| upstream #1 | --------\
+\-------------/         |
+                        v
+                   /----------\     /---------\    /------\            /---------\
+/-------------\    |          |     |         |    |      |            |cGRE     |
+| upstream #2 | -> | assembly | --> | release | -> | test |-> ... -->  | promote |
+\-------------/    |          |     |         |    |      |            |         |
+                   \----------/     \---------/    \------/            \---------/
+                        ^
+/-------------\         |
+| upstream #2 | --------/
+\-------------/
+....
+
+== Antipatterns
+
+* Deploy software manually
+* Deploy to production-like environment
+* Manual configuration management of the production environment
+
+== Patterns
+
+* Build binaries only once
+* Deploy the same binary to every environment
+* Smoke test you deployments
+
+****
+If project builds, than run it as far through the testing pipeline as it can go until it gets to the end.
+****
+
+== Three steps we'lll focus on
+
+* Release process
+** Run tests
+** Tag version
+** Prepare new development version
+* Prepare docker image
+* Assemble application from multiple parts - _microservish architecture_
+
+== Why bother - we have release plugin?
+
+* The plugin builds twice: +
+build the code -> tag / branch -> build the branch
+** `[maven-release-plugin] prepare release ...`` and `[maven-release-plugin] prepare for next development iteration` - so not every commit is releasable
+* Perform the release on current branch
+* Commits and pushes the changes
+
+.configuration
+----
+include::project/pom.xml[tags=release-plugin, indent=0]
+----
+<1> Name of the tag
+<2> We don't want to commit remotly - we will do it later on
+<3> We checkout out (to perform the release) from the local tag
+<4> As for preparation we will be running following goals: `clean`, `test`, `scm:branch` and `exec:exec` +
+ Standard goal is `clean verify` - but we also create a branch and check it out
+<5> For the release itself - we will be doing just installation (no deployment) - again that will come later
+
+.command
+----
+$ mvn -B release:prepare release:perform
+----
+
+== Let Maven rule the NPM
+
+----
+include::project/app/todo-ui/pom.xml[tags=npm, indent=0]
+----
+
+----
+include::project/app/todo-ui/pom.xml[tags=resources, indent=0]
+----
+
+== Docker
+
+----
+include::project/deploy/pom.xml[tags=deployable-version, indent=0]
+----
+
+----
+include::project/deploy/docker/pom.xml[tags=docker, indent=0]
+----
+<1> References which artifact actually goes into docker image
+
+////
+
+== Tiding up
+
+.Run UAT tests
+    with Selenium, Arquillian, whichever in whatever way
+
+.Merge Release branch in Develop branch
+    git checkout develop
+    git merge --no-ff release-1.0.0
+
+.Merge Released code in master (in other word commit 1 of step 2)
+    git checkout develop
+    git merge --no-ff release-1.0.0~1
+
+.Delete local release branch
+    git branch -D release-1.0.0
+
+.Push everything to remote (Tag/Master and Develop)
+    git push --all && git push --tags
+
+.Push binaries to external repository
+    mvn deploy:deploy -Dworking.version=1.0.0
+
+////
+
+== Thank you
+
+* Project: http://tiny.cc/maven-devoxx
+* Twitter: @kubem
