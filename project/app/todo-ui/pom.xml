@@ -44,7 +44,15 @@
                             <goal>npm</goal>
                         </goals>
                     </execution>
-                    <!-- TODO: do the actual build -->
+                    <execution>
+                        <id>npm build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <!-- end::npm[] -->
