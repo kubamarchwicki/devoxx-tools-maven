@@ -77,10 +77,12 @@
                 <configuration>
                     <tagNameFormat>v@{project.version}</tagNameFormat><!--1-->
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <!-- TODO: dont push changes --> <!--2-->
-                    <!-- TODO: do the branching locally --> <!--3-->
-                    <!-- TODO: run test, branch and checkout as preparation --> <!--4-->
-                    <!-- TODO: just install on release - no deployment --> <!--5-->
+                    <pushChanges>false</pushChanges> <!--2-->
+                    <localCheckout>true</localCheckout> <!--3-->
+                    <preparationGoals>
+                        clean verify scm:branch exec:exec@git-checkout
+                    </preparationGoals> <!--4-->
+                    <goals>install</goals> <!--5-->
                 </configuration>
             </plugin>
             <!-- end::release-plugin[] -->
