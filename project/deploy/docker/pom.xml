@@ -39,7 +39,11 @@
                                     <inline>
                                         <dependencySets>
                                             <dependencySet>
-                                                <!-- TODO: includes --> <!-- 1 -->
+                                                <includes>
+                                                    <include>
+                                                        com.example.maven.application:war-assembly
+                                                    </include> <!--1-->
+                                                </includes>
                                                 <outputDirectory>
                                                     /opt/jboss/wildfly/standalone/deployments/
                                                 </outputDirectory>
