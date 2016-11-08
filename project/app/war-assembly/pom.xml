@@ -16,37 +16,20 @@
     <name>App :: application :: WAR</name>
 
     <properties>
-      <failOnMissingWebXml>false</failOnMissingWebXml>
+        <failOnMissingWebXml>false</failOnMissingWebXml>
     </properties>
 
     <dependencies>
-      <dependency>
-        <groupId>com.example.maven.application</groupId>
-        <artifactId>todo-ui</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>com.example.maven.application</groupId>
-        <artifactId>todo-app</artifactId>
-        <type>war</type>
-      </dependency>
+        <dependency>
+            <groupId>com.example.maven.application</groupId>
+            <artifactId>todo-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.example.maven.application</groupId>
+            <artifactId>todo-app</artifactId>
+            <type>war</type>
+        </dependency>
     </dependencies>
 
-    <build>
-        <finalName>ROOT</finalName>
-        <plugins>
-    			<plugin>
-    				<groupId>org.apache.maven.plugins</groupId>
-    				<artifactId>maven-war-plugin</artifactId>
-    				<version>3.0.0</version>
-    				<configuration>
-    					<overlays>
-    						<overlay>
-    						</overlay>
-    					</overlays>
-    					<attachClasses>true</attachClasses>
-    				</configuration>
-    			</plugin>
-    		</plugins>
-    </build>
-
+    <!-- TODO: war-assembly-plugin -->
 </project>
