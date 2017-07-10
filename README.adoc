@@ -24,13 +24,13 @@ Jakub Marchwicki::
 
 * Maven will make the preferred path the *easy path*
 ** The *easy path* might not be the *best path*
-* If your idea doesn't confront the Maven's  - *it's you problem*
-** After that not easiest to extends - matters of hours not minutes
-* Honestly, besides dependency management there is not much so great about Maven
+* If your idea doesn't comply with Maven's  - *it's your problem*
+** After that not easiest to extend - matters of hours not minutes
+* Honestly, besides dependency management what's so great about Maven
 
 == Why Maven?
 
-* Well known, old-but-goldie tech classic
+* Well known, old-but-gold tech classic
 
 == Build pipeline
 
@@ -43,7 +43,7 @@ Jakub Marchwicki::
 \-------------/         |
                         v
                    /----------\     /---------\    /------\            /---------\
-/-------------\    |          |     |         |    |      |            |cGRE     |
+/-------------\    |          |     |         |    |      |            |         |
 | upstream #2 | -> | assembly | --> | release | -> | test |-> ... -->  | promote |
 \-------------/    |          |     |         |    |      |            |         |
                    \----------/     \---------/    \------/            \---------/
@@ -57,19 +57,19 @@ Jakub Marchwicki::
 
 * Deploy software manually
 * Deploy to production-like environment
-* Manual configuration management of the production environment
+* Manual configuration management for production environment
 
 == Patterns
 
 * Build binaries only once
 * Deploy the same binary to every environment
-* Smoke test you deployments
+* Smoke test your deployments
 
 ****
 If project builds, than run it as far through the testing pipeline as it can go until it gets to the end.
 ****
 
-== Three steps we'lll focus on
+== Three steps we'll focus on
 
 * Release process
 ** Run tests
@@ -91,9 +91,9 @@ build the code -> tag / branch -> build the branch
 include::project/pom.xml[tags=release-plugin, indent=0]
 ----
 <1> Name of the tag
-<2> We don't want to commit remotly - we will do it later on
-<3> We checkout out (to perform the release) from the local tag
-<4> As for preparation we will be running following goals: `clean`, `test`, `scm:branch` and `exec:exec` +
+<2> We don't want to commit remotely - we will do it later on
+<3> We checkout (to perform the release) from the local tag
+<4> To prepare, run the following goals: `clean`, `test`, `scm:branch` and `exec:exec` +
  Standard goal is `clean verify` - but we also create a branch and check it out
 <5> For the release itself - we will be doing just installation (no deployment) - again that will come later
 
